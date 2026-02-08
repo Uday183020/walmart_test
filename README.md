@@ -86,20 +86,6 @@ group by payment_method
 ```
      - Analyzing peak sales periods and customer buying patterns.
 ```sql
-SELECT *
-from
-( select
-	Branch,
-     date,  
-    DATE_FORMAT(STR_TO_DATE(date, '%d-%m-%Y'), '%W') AS day_name,
-    count(*) as no_transactions,
-    rank() over(Partition by branch order by count(*) desc) as category_rank
-FROM walmart
-group by 1, 2
-) as branch_counts
-where category_rank = 1
-```
-```sql
 SELECT 
 CASE 
         WHEN HOUR(CAST(time AS TIME)) < 12 THEN 'Morning'
