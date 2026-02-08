@@ -68,9 +68,65 @@ group by 1, 2
 ```
 
      - Identifying best-selling product categories.
+```sql
+select 
+   category,
+   sum(unit_price + profit_margin) as profit
+from walmart
+group by 1
+```
      - Sales performance by time, city, and payment method.
+```sql
+select
+    payment_method,
+    count(*) as no_payments,
+    sum(quantity) as no_qty_sold
+from walmart
+group by payment_method
+```
      - Analyzing peak sales periods and customer buying patterns.
+```sql
+SELECT *
+from
+( select
+	Branch,
+     date,  
+    DATE_FORMAT(STR_TO_DATE(date, '%d-%m-%Y'), '%W') AS day_name,
+    count(*) as no_transactions,
+    rank() over(Partition by branch order by count(*) desc) as category_rank
+FROM walmart
+group by 1, 2
+) as branch_counts
+where category_rank = 1
+```
+``sql
+SELECT 
+CASE 
+        WHEN HOUR(CAST(time AS TIME)) < 12 THEN 'Morning'
+        WHEN HOUR(CAST(time AS TIME)) BETWEEN 12 AND 17 THEN 'Afternoon'
+        ELSE 'Evening'
+    END AS day_time,
+    count(*)
+    -- CAST(time AS TIME) AS formatted_time
+FROM walmart
+group by 1
+```
      - Profit margin analysis by branch and category.
+```sql
+with cte
+as
+(select
+    branch,
+    payment_method,
+    count(*) as total_trans,
+    rank() over(partition by branch order by count(*) desc) as category_rank
+from walmart
+group by 1, 2
+)
+select*
+from cte
+where category_rank = 1
+```
    - **Documentation**: Keep clear notes of each query's objective, approach, and results.
 
 ### 10. Project Publishing and Documentation
