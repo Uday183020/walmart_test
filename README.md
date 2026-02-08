@@ -99,7 +99,7 @@ group by 1, 2
 ) as branch_counts
 where category_rank = 1
 ```
-``sql
+```sql
 SELECT 
 CASE 
         WHEN HOUR(CAST(time AS TIME)) < 12 THEN 'Morning'
